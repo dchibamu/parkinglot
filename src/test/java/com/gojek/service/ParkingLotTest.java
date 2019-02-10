@@ -11,8 +11,11 @@ import static org.junit.Assert.assertThat;
 @DisplayName("Unit tests assertions for ParkingLot service ")
 class ParkingLotTest {
 
-    private static final String EXPECTED_OUTPUT_FROM_CREATE_PARKING_LOT="Created a parking lot with %s slots";
-    private static final String EXPECTED_OUT_WHEN_PARKINGLOT_IS_FULL="Sorry, parking lot is full";
+    private static final String EXPECTED_OUTPUT_FROM_CREATE_PARKING_LOT = "Created a parking lot with %s slots";
+    private static final String EXPECTED_OUTPUT_WHEN_PARKINGLOT_IS_FULL = "Sorry, parking lot is full";
+    private static final String EXPECTED_OUTPUT_WHEN_SLOT_NUMBER_IS_FREE = "Slot number %d is free";
+    private static final String EXPECTED_OUTPUT_WHEN_NEW_SLOT_IS_ALLOCATED = "Allocated slot number %d";
+    private static final String EXPECTED_OUTPUT_WHEN_NOT_FOUND = "Not found";
 
     @Test
     @DisplayName("Should be able to create a parking lot with 10 spaces")
