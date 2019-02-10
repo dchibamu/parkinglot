@@ -1,11 +1,11 @@
 package com.gojek.service;
 
+import com.gojek.domain.Car;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @DisplayName("Unit tests assertions for ParkingLot service ")
@@ -31,5 +31,19 @@ class ParkingLotTest {
         int parkingLotCapacity = 0;
         ParkingLot parkingLot = new ParkingLot();
         assertThat(parkingLot.createParkingLot(parkingLotCapacity), is(not(equalTo(String.format(EXPECTED_OUTPUT_FROM_CREATE_PARKING_LOT, parkingLotCapacity)))));
+    }
+
+    @Test
+    @DisplayName("Should return allocated slot number message")
+    void shouldParkACarInParkingLot(){
+        int parkingLotCapacity = 4;
+        ParkingLot parkingLot = new ParkingLot();
+        parkingLot.createParkingLot(parkingLotCapacity);
+        String registrationNumber = "JPX-876-GP";
+        String color = "FFFXDX0";
+        Car car = new Car(registrationNumber, color);
+        String outcome = parkingLot.parkCar(car);
+        //assertThat(parkingLot.getParkingSpaces().size(), is(1));
+        assertEquals(String.format(EXPECTED_OUTPUT_WHEN_NEW_SLOT_IS_ALLOCATED, 1), outcome);
     }
 }

@@ -6,6 +6,7 @@ import com.gojek.domain.Slot;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.gojek.util.ParkingLotUtil.ALLOCATED_SLOT_NUMBER;
 import static com.gojek.util.ParkingLotUtil.IGNORE;
 import static com.gojek.util.ParkingLotUtil.PARKING_LOT_CREATED;
 
@@ -20,5 +21,14 @@ public class ParkingLot {
         capacity = size;
         parkingSpaces = new LinkedHashMap<>(capacity);
         return String.format(PARKING_LOT_CREATED, capacity);
+    }
+
+    public String parkCar(Car car){
+
+        return String.format(ALLOCATED_SLOT_NUMBER, 1);
+    }
+
+    public Map<Slot, Car> getParkingSpaces() {
+        return parkingSpaces;
     }
 }
