@@ -11,6 +11,7 @@ import static org.junit.Assert.assertThat;
 class ParkingLotTest {
 
     private static final String EXPECTED_OUTPUT_FROM_CREATE_PARKING_LOT="Created a parking lot with %s slots";
+
     @Test
     @DisplayName("Should be able to create a parking lot with 10 spaces")
     void shouldCreateParkingLotOfSizeTen(){
