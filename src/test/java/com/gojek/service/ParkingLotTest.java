@@ -1,8 +1,16 @@
 package com.gojek.service;
 
 import com.gojek.domain.Car;
+import com.gojek.domain.Slot;
+import org.junit.Ignore;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.LinkedHashMap;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
@@ -17,6 +25,7 @@ class ParkingLotTest {
     private static final String EXPECTED_OUTPUT_WHEN_NEW_SLOT_IS_ALLOCATED = "Allocated slot number %d";
     private static final String EXPECTED_OUTPUT_WHEN_NOT_FOUND = "Not found";
     private static final String EXPECTED_EMPTY_STRING="";
+
     @Test
     @DisplayName("Should be able to create a parking lot with 10 spaces")
     void shouldCreateParkingLotOfSizeTen(){
@@ -322,7 +331,7 @@ class ParkingLotTest {
         Car car3 = new Car(registrationNumber, color);
         parkingLot.parkCar(car3);
 
-        registrationNumber = "JKLA-9897-HR";
+        registrationNumber = "IHJO-121-NW";
         color = "BLUE";
         Car car4 = new Car(registrationNumber, color);
         parkingLot.parkCar(car4);
@@ -333,7 +342,7 @@ class ParkingLotTest {
         parkingLot.parkCar(car5);
 
         String outCome = parkingLot.getSlotNumberForRegistrationNumber(givenRegistraionNumber);
-        assertThat(outCome, is(equalTo(5)));
+        assertThat(outCome, is(equalTo("5")));
     }
 
     @Test
@@ -354,9 +363,83 @@ class ParkingLotTest {
         Car car2 = new Car(registrationNumber, color);
         parkingLot.parkCar(car2);
 
-
         String outCome = parkingLot.getSlotNumberForRegistrationNumber(givenRegistraionNumber);
         assertThat(outCome, is(equalTo(EXPECTED_OUTPUT_WHEN_NOT_FOUND)));
     }
 
+    @Test
+    @DisplayName("Should display formatted parking lot status")
+    void shouldDisplayFormattedParkingLotStatusOutput() {
+        String expectedOutput = "Slot No.\tRegistration No\tColour\n" +
+                "1\tK89I-83121-KLD89\tWhite\n" +
+                "2\tCKI-8DAA1-HDHAS\tBlue\n" +
+                "3\tHJFAH-824832-JKJ\tWhite\n" +
+                "4\tFGH-8977-K05GHK\tArmy Green\n" +
+                "5\tDADS-532432-HDG\tBlue\n"+
+                "6\tGHHFG-232-75645\tArmy Green\n" +
+                "7\tFHGD-GSFDS-12132\tYELLOW\n";
+        ParkingLot parkingLot = new ParkingLot();
+        int capacity = 10;
+        parkingLot.createParkingLot(capacity);
+        Car car1 = new Car("K89I-83121-KLD89", "White");
+        Car car2 = new Car("CKI-8DAA1-HDHAS", "Blue");
+        Car car3 = new Car("2121-TWRW-HDGD", "Red");
+        Car car4 = new Car("FGH-8977-K05GHK", "Army Green");
+        Car car5 = new Car("HJFAH-824832-JKJ", "White");
+        Car car6 = new Car("DADS-532432-HDG", "Blue");
+        Car car7 = new Car("GHHFG-232-75645", "Army Green");
+        Car car8 = new Car("FHGD-GSFDS-12132", "YELLOW");
+        parkingLot.parkCar(car1);
+        parkingLot.parkCar(car2);
+        parkingLot.parkCar(car3);
+        parkingLot.parkCar(car4);
+        parkingLot.unPark(3);
+        parkingLot.parkCar(car5);
+        parkingLot.parkCar(car6);
+        parkingLot.parkCar(car7);
+        parkingLot.parkCar(car8);
+        assertThat(parkingLot.status(), is(equalTo(expectedOutput)));
+    }
+
+    @Test
+    @DisplayName("Should validate create_parking_lot command")
+    void shouldValidateCreateParkingLotCommand(){
+
+        ParkingLot parkingLot = new ParkingLot();
+        int capacity = 10;
+        String expectedResult =String.format(EXPECTED_OUTPUT_FROM_CREATE_PARKING_LOT, capacity);
+        String command = "create_parking_lot 10";
+        String parkingLotCreated = parkingLot.executeAction(command);
+        assertThat(parkingLotCreated, is(equalTo(expectedResult)));
+    }
+
+    @Test
+    @DisplayName("Should validate the leave command")
+    void shouldValidateAndCallLeaveCommand(){
+        ParkingLot parkingLot = new ParkingLot();
+        int capacity = 3;
+        parkingLot.executeAction(String.format("create_parking_lot %d", capacity));
+        parkingLot.parkCar(new Car("K89I-83121-KLD89", "White"));
+        parkingLot.parkCar(new Car("CKI-8DAA1-HDHAS", "Blue"));
+        parkingLot.parkCar(new Car("2121-TWRW-HDGD", "Red"));
+
+        String command = "leave 2";
+        String expectedResult = String.format(EXPECTED_OUTPUT_WHEN_SLOT_NUMBER_IS_FREE, 2);
+        assertThat(parkingLot.executeAction(command), is(equalTo(expectedResult)));
+    }
+
+    @Test
+    @DisplayName("Should validate and call registration_numbers_for_cars_with_color command")
+    void shouldValidateAndCallGetRegistrationNumbersForCarsWithColorCommand(){
+        ParkingLot parkingLot = new ParkingLot();
+        int capacity = 4;
+        parkingLot.executeAction(String.format("create_parking_lot %d", capacity));
+        parkingLot.parkCar(new Car("K89I-83121-KLD89", "Green"));
+        parkingLot.parkCar(new Car("CKI-8DAA1-HDHAS", "Blue"));
+        parkingLot.parkCar(new Car("2121-TWRW-HDGD", "Red"));
+        parkingLot.parkCar(new Car("FGH-8977-K05GHK", "Green"));
+        String expectedResult = "K89I-83121-KLD89, FGH-8977-K05GHK";
+        String command = "registration_numbers_for_cars_with_colour Green";
+        assertThat(parkingLot.executeAction(command), is(equalTo(expectedResult)));
+    }
 }

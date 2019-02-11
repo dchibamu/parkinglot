@@ -106,8 +106,20 @@ public class ParkingLot {
             return NOT_FOUND;
     }
 
+    /**
+     * Finds slot number for given registration number, otherwise returns Not found
+     * @param registrationNumber - car registration number
+     * @return - String number or Not found
+     */
     public String getSlotNumberForRegistrationNumber(String registrationNumber){
-        return "4";
+
+        return parkingSpaces.entrySet().stream()
+                .filter(car ->car.getValue().getRegistrationNumber().equalsIgnoreCase(registrationNumber))
+                .filter(entry -> entry.getKey().isOccupied())
+                .map(Map.Entry::getKey)
+                .map(Slot::getNumber)
+                .map(String::valueOf)
+                .findFirst().orElse(NOT_FOUND);
     }
 
     public Map<Slot, Car> getParkingSpaces() {
@@ -120,10 +132,6 @@ public class ParkingLot {
             output.append(String.format("%s\t%s\t%s\n",entry.getKey().getNumber(),entry.getValue().getRegistrationNumber(), entry.getValue().getColor()));
         }
         return output.toString();
-    }
-
-    public boolean isParkingLotFull(){
-        return freeSlots.isEmpty() && slotNumber == capacity;
     }
 
     /**
@@ -148,7 +156,7 @@ public class ParkingLot {
             case LEAVE:
                 int slotNum = parseNumericalArguments(commandLineArgs[1]);
                 if( slotNum > 0 && slotNum < capacity)
-                    return unPark(slotNumber);
+                    return unPark(slotNum);
             case REGISTRATION_NUMBERS_FOR_CARS_WITH_COLOUR:
                 if(commandLineArgs.length == 2)
                     return getRegistrationNumbersForCarsWithColor(commandLineArgs[1]);
