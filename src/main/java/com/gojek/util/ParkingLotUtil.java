@@ -9,4 +9,9 @@ public class ParkingLotUtil {
     public static final String NOT_FOUND = "Not found";
     public static final String EXIT = "exit";
     public static final String IGNORE = "";
+
+    public static boolean isValidCommand(String command, String[] commandLineArgs){
+
+        return false;
+    }
 }

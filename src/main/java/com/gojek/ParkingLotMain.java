@@ -1,12 +1,17 @@
 package com.gojek;
 
 import com.gojek.service.ParkingLot;
+import org.apache.commons.lang3.StringUtils;
+
 import java.nio.file.Path;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Scanner;
 import java.util.stream.Stream;
+
+import static com.gojek.util.ParkingLotUtil.EXIT;
 
 public class ParkingLotMain {
 
@@ -25,7 +30,12 @@ public class ParkingLotMain {
 
     private static void runInteractiveParkingLot(){
         do {
-            //TODO: use a scanner to read user input from console.
+            Scanner scanner = new Scanner(System.in);
+            String nextCommand = scanner.nextLine();
+            if(StringUtils.isNotBlank(nextCommand) && nextCommand.equalsIgnoreCase(EXIT))
+                break;
+            //TODO: validate command from console
+            //TODO: invoke executeCommand(nextCommand) on parkingLot instance
         }while(true);
     }
 
