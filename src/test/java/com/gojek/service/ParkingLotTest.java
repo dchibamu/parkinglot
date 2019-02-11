@@ -336,4 +336,27 @@ class ParkingLotTest {
         assertThat(outCome, is(equalTo(5)));
     }
 
+    @Test
+    @DisplayName("Should return Not found slot number for given registration number")
+    void shouldReturnNotFoundSlotNumberGivenRegistrationNumber(){
+        String givenRegistraionNumber = "THKAL-7819321";
+        int parkingLotCapacity = 5;
+        ParkingLot parkingLot = new ParkingLot();
+        parkingLot.createParkingLot(parkingLotCapacity);
+
+        String registrationNumber = "JPX-876-GP";
+        String color = "BLUE";
+        Car car = new Car(registrationNumber, color);
+        parkingLot.parkCar(car);
+
+        registrationNumber = "HJK-970-DN";
+        color = "YELLOW";
+        Car car2 = new Car(registrationNumber, color);
+        parkingLot.parkCar(car2);
+
+
+        String outCome = parkingLot.getSlotNumberForRegistrationNumber(givenRegistraionNumber);
+        assertThat(outCome, is(equalTo(EXPECTED_OUTPUT_WHEN_NOT_FOUND)));
+    }
+
 }
