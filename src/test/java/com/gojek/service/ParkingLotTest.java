@@ -154,7 +154,6 @@ class ParkingLotTest {
 
         String outCome = parkingLot.getRegistrationNumbersForCarsWithColor(givenColor);
         assertThat(outCome, is(equalTo(expectedREgistrationNumbers)));
-
     }
 
 }

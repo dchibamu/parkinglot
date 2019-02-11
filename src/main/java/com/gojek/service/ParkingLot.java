@@ -6,6 +6,7 @@ import com.gojek.domain.Slot;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.gojek.domain.Command.INVALID;
 import static com.gojek.util.ParkingLotUtil.*;
@@ -57,7 +58,16 @@ public class ParkingLot {
     }
 
     public String getRegistrationNumbersForCarsWithColor(String color){
-        return "JPX-876-GP, DFX-999-GP, ASK-515-WP";
+        String result = parkingSpaces.entrySet().stream()
+                .filter(slot -> slot.getKey().isOccupied())
+                .map(Map.Entry::getValue)
+                .filter(car -> car.getColor().equalsIgnoreCase(color))
+                .map(Car::getRegistrationNumber)
+                .collect(Collectors.joining(", "));
+        if(StringUtils.isNotBlank(result))
+            return result;
+        else
+            return NOT_FOUND;
     }
 
     public String getSlotNumbersForCarsWithColor(String color){
