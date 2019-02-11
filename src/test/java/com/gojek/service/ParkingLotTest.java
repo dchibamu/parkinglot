@@ -128,4 +128,33 @@ class ParkingLotTest {
         assertThat(leaveSlotOutcome, is(equalTo(String.format(EXPECTED_OUTPUT_WHEN_SLOT_NUMBER_IS_FREE, slotNumber))));
     }
 
+    @Test
+    @DisplayName("Should return registration numbers with color blue")
+    void getRegistrationNumbersForCarsWithColor_Blue(){
+        String givenColor = "BLUE";
+        String expectedREgistrationNumbers = "JPX-876-GP, HJK-970-DN, JKLA-9897-HR";
+        int parkingLotCapacity = 3;
+        ParkingLot parkingLot = new ParkingLot();
+        parkingLot.createParkingLot(parkingLotCapacity);
+
+        String registrationNumber = "JPX-876-GP";
+        String color = "BLUE";
+        Car car = new Car(registrationNumber, color);
+        parkingLot.parkCar(car);
+
+        registrationNumber = "HJK-970-DN";
+        color = "YELLOW";
+        Car car2 = new Car(registrationNumber, color);
+        parkingLot.parkCar(car2);
+
+        registrationNumber = "JKLA-9897-HR";
+        color = "BLUE";
+        Car car3 = new Car(registrationNumber, color);
+        parkingLot.parkCar(car3);
+
+        String outCome = parkingLot.getRegistrationNumbersForCarsWithColor(givenColor);
+        assertThat(outCome, is(equalTo(expectedREgistrationNumbers)));
+
+    }
+
 }
