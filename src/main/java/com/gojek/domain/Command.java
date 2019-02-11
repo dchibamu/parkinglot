@@ -1,0 +1,11 @@
+package com.gojek.domain;
+
+public enum  Command {
+    CREATE_PARKING_LOT,
+    PARK,
+    LEAVE,
+    STATUS,
+    REGISTRATION_NUMBERS_FOR_CARS_WITH_COLOUR,
+    SLOT_NUMBERS_FOR_CARS_WITH_COLOR,
+    SLOT_NUMBER_FOR_REGISTRATION_NUMBER
+}
