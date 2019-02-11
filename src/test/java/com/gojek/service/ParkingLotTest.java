@@ -16,7 +16,7 @@ class ParkingLotTest {
     private static final String EXPECTED_OUTPUT_WHEN_SLOT_NUMBER_IS_FREE = "Slot number %d is free";
     private static final String EXPECTED_OUTPUT_WHEN_NEW_SLOT_IS_ALLOCATED = "Allocated slot number %d";
     private static final String EXPECTED_OUTPUT_WHEN_NOT_FOUND = "Not found";
-
+    private static final String EXPECTED_EMPTY_STRING="";
     @Test
     @DisplayName("Should be able to create a parking lot with 10 spaces")
     void shouldCreateParkingLotOfSizeTen(){
@@ -45,6 +45,21 @@ class ParkingLotTest {
         String outcome = parkingLot.parkCar(car);
         assertThat(parkingLot.getParkingSpaces().size(), is(1));
         assertEquals(String.format(EXPECTED_OUTPUT_WHEN_NEW_SLOT_IS_ALLOCATED, 1), outcome);
+    }
+
+    @Test
+    @DisplayName("Should return empty string")
+    void shouldReturnNothingIfSameCarIsAttemptedToBeParkedIfAlreadyInParkingLot(){
+        int parkingLotCapacity = 1;
+        ParkingLot parkingLot = new ParkingLot();
+        parkingLot.createParkingLot(parkingLotCapacity);
+
+        String registrationNumber = "JPX-876-GP";
+        String color = "BLUE";
+        Car car = new Car(registrationNumber, color);
+        parkingLot.parkCar(car);
+        String outCome = parkingLot.parkCar(car);
+        assertEquals(EXPECTED_EMPTY_STRING, outCome);
     }
 
     @Test
@@ -129,6 +144,23 @@ class ParkingLotTest {
     }
 
     @Test
+    @DisplayName("Should return empty string if slot number provided is outside the range 1 to capacity")
+    void unParkWithInvalidSlotNumber(){
+        int parkingLotCapacity = 3;
+        ParkingLot parkingLot = new ParkingLot();
+        parkingLot.createParkingLot(parkingLotCapacity);
+
+        String registrationNumber = "JPX-876-GP";
+        String color = "BLUE";
+        Car car = new Car(registrationNumber, color);
+        parkingLot.parkCar(car);
+
+        int slotNumber = 12;
+        String leaveSlotOutcome = parkingLot.unPark(slotNumber);
+        assertThat(leaveSlotOutcome, is(equalTo(String.format(EXPECTED_EMPTY_STRING, slotNumber))));
+    }
+
+    @Test
     @DisplayName("Should return registration numbers with color blue")
     void getRegistrationNumbersForCarsWithColor_Blue(){
         String givenColor = "BLUE";
@@ -160,7 +192,6 @@ class ParkingLotTest {
     @DisplayName("Should return zero registration numbers for cars with colorless color")
     void getRegistrationNumbersForCarsWithColor_Colorless(){
         String givenColor = "colorless";
-        String expectedRegistrationNumbers = "Not found";
         int parkingLotCapacity = 3;
         ParkingLot parkingLot = new ParkingLot();
         parkingLot.createParkingLot(parkingLotCapacity);
@@ -181,7 +212,7 @@ class ParkingLotTest {
         parkingLot.parkCar(car3);
 
         String outCome = parkingLot.getRegistrationNumbersForCarsWithColor(givenColor);
-        assertThat(outCome, is(equalTo(expectedRegistrationNumbers)));
+        assertThat(outCome, is(equalTo(EXPECTED_OUTPUT_WHEN_NOT_FOUND)));
     }
 
     @Test
@@ -238,6 +269,71 @@ class ParkingLotTest {
 
         String outCome = parkingLot.getSlotNumbersForCarsWithColor(givenColor);
         assertThat(outCome, is(equalTo(expectedSlotNumbers)));
+    }
+
+    @Test
+    @DisplayName("Should return Not found for invalid color")
+    void getSlotNumbersForCarsWithColor_NonExistentColor(){
+        String givenColor = "*^&%&^jkjk787nbj";
+        int parkingLotCapacity = 4;
+        ParkingLot parkingLot = new ParkingLot();
+        parkingLot.createParkingLot(parkingLotCapacity);
+
+        String registrationNumber = "JPX-876-GP";
+        String color = "BLUE";
+        Car car = new Car(registrationNumber, color);
+        parkingLot.parkCar(car);
+
+        registrationNumber = "HJK-970-DN";
+        color = "GREEN";
+        Car car2 = new Car(registrationNumber, color);
+        parkingLot.parkCar(car2);
+
+        registrationNumber = "JKLA-9897-HR";
+        color = "BLUE";
+        Car car3 = new Car(registrationNumber, color);
+        parkingLot.parkCar(car3);
+
+        String outCome = parkingLot.getSlotNumbersForCarsWithColor(givenColor);
+        assertThat(outCome, is(equalTo(EXPECTED_OUTPUT_WHEN_NOT_FOUND)));
+    }
+
+
+    @Test
+    @DisplayName("Should return valid slot number for given registration number")
+    void shouldReturnSlotNumberForRegistrationNumber(){
+        String givenRegistraionNumber = "THKAL-7819321";
+        int parkingLotCapacity = 5;
+        ParkingLot parkingLot = new ParkingLot();
+        parkingLot.createParkingLot(parkingLotCapacity);
+
+        String registrationNumber = "JPX-876-GP";
+        String color = "BLUE";
+        Car car = new Car(registrationNumber, color);
+        parkingLot.parkCar(car);
+
+        registrationNumber = "HJK-970-DN";
+        color = "YELLOW";
+        Car car2 = new Car(registrationNumber, color);
+        parkingLot.parkCar(car2);
+
+        registrationNumber = "JKLA-9897-HR";
+        color = "BLUE";
+        Car car3 = new Car(registrationNumber, color);
+        parkingLot.parkCar(car3);
+
+        registrationNumber = "JKLA-9897-HR";
+        color = "BLUE";
+        Car car4 = new Car(registrationNumber, color);
+        parkingLot.parkCar(car4);
+
+        registrationNumber = "THKAL-7819321";
+        color = "BLUE";
+        Car car5 = new Car(registrationNumber, color);
+        parkingLot.parkCar(car5);
+
+        String outCome = parkingLot.getSlotNumberForRegistrationNumber(givenRegistraionNumber);
+        assertThat(outCome, is(equalTo(5)));
     }
 
 }
