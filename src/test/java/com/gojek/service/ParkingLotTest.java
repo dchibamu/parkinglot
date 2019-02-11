@@ -132,7 +132,7 @@ class ParkingLotTest {
     @DisplayName("Should return registration numbers with color blue")
     void getRegistrationNumbersForCarsWithColor_Blue(){
         String givenColor = "BLUE";
-        String expectedREgistrationNumbers = "JPX-876-GP, HJK-970-DN, JKLA-9897-HR";
+        String expectedREgistrationNumbers = "JPX-876-GP, JKLA-9897-HR";
         int parkingLotCapacity = 3;
         ParkingLot parkingLot = new ParkingLot();
         parkingLot.createParkingLot(parkingLotCapacity);
