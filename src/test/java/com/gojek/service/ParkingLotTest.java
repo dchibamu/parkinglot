@@ -36,14 +36,34 @@ class ParkingLotTest {
     @Test
     @DisplayName("Should return allocated slot number message")
     void shouldParkACarInParkingLot(){
-        int parkingLotCapacity = 4;
+        int parkingLotCapacity = 1;
         ParkingLot parkingLot = new ParkingLot();
         parkingLot.createParkingLot(parkingLotCapacity);
         String registrationNumber = "JPX-876-GP";
-        String color = "FFFXDX0";
+        String color = "BLUE";
         Car car = new Car(registrationNumber, color);
         String outcome = parkingLot.parkCar(car);
-        //assertThat(parkingLot.getParkingSpaces().size(), is(1));
+        assertThat(parkingLot.getParkingSpaces().size(), is(1));
         assertEquals(String.format(EXPECTED_OUTPUT_WHEN_NEW_SLOT_IS_ALLOCATED, 1), outcome);
     }
+
+    @Test
+    @DisplayName("Should return parking lot is full message")
+    void shouldNotParkACarInParkingLot(){
+        int parkingLotCapacity = 1;
+        ParkingLot parkingLot = new ParkingLot();
+        parkingLot.createParkingLot(parkingLotCapacity);
+
+        String registrationNumber = "JPX-876-GP";
+        String color = "BLUE";
+        Car car = new Car(registrationNumber, color);
+        parkingLot.parkCar(car);
+
+        registrationNumber = "DFX-999-GP";
+        color = "GREEN";
+        Car car2 = new Car(registrationNumber, color);
+        String outcome2 = parkingLot.parkCar(car2);
+        assertEquals(EXPECTED_OUTPUT_WHEN_PARKINGLOT_IS_FULL, outcome2);
+    }
+
 }

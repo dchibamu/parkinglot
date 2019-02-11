@@ -4,7 +4,11 @@ public class Slot {
 
     private int number;
     private boolean occupied;
-    private Car car;
+
+    public Slot(int number, boolean occupied) {
+        this.number = number;
+        this.occupied = occupied;
+    }
 
     public int getNumber() {
         return number;
@@ -22,14 +26,6 @@ public class Slot {
         this.occupied = occupied;
     }
 
-    public Car getCar() {
-        return car;
-    }
-
-    public void setCar(Car car) {
-        this.car = car;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -38,15 +34,13 @@ public class Slot {
         Slot slot = (Slot) o;
 
         if (getNumber() != slot.getNumber()) return false;
-        if (isOccupied() != slot.isOccupied()) return false;
-        return getCar().equals(slot.getCar());
+        return isOccupied() == slot.isOccupied();
     }
 
     @Override
     public int hashCode() {
         int result = getNumber();
         result = 31 * result + (isOccupied() ? 1 : 0);
-        result = 31 * result + getCar().hashCode();
         return result;
     }
 
@@ -55,7 +49,6 @@ public class Slot {
         return "Slot{" +
                 "number=" + number +
                 ", occupied=" + occupied +
-                ", car=" + car +
                 '}';
     }
 }
