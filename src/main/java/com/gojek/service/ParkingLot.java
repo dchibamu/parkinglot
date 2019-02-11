@@ -142,7 +142,7 @@ public class ParkingLot {
      * @param commandLine
      * @return String output to STDOUT
      */
-    public String executeAction(String commandLine){
+    public String executeCommand(String commandLine){
         if(StringUtils.isBlank(commandLine))
             return IGNORE;
         String[] commandLineArgs = Arrays.stream(commandLine.split("\\s+")).toArray(String[]::new);

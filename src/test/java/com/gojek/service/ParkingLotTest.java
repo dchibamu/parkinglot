@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-@DisplayName("Unit tests assertions for ParkingLot service ")
+@DisplayName("<== ParkingLot service ==>")
 class ParkingLotTest {
 
     private static final String EXPECTED_OUTPUT_FROM_CREATE_PARKING_LOT = "Created a parking lot with %s slots";
@@ -409,7 +409,7 @@ class ParkingLotTest {
         int capacity = 10;
         String expectedResult =String.format(EXPECTED_OUTPUT_FROM_CREATE_PARKING_LOT, capacity);
         String command = "create_parking_lot 10";
-        String parkingLotCreated = parkingLot.executeAction(command);
+        String parkingLotCreated = parkingLot.executeCommand(command);
         assertThat(parkingLotCreated, is(equalTo(expectedResult)));
     }
 
@@ -418,14 +418,14 @@ class ParkingLotTest {
     void shouldValidateAndCallLeaveCommand(){
         ParkingLot parkingLot = new ParkingLot();
         int capacity = 3;
-        parkingLot.executeAction(String.format("create_parking_lot %d", capacity));
+        parkingLot.executeCommand(String.format("create_parking_lot %d", capacity));
         parkingLot.parkCar(new Car("K89I-83121-KLD89", "White"));
         parkingLot.parkCar(new Car("CKI-8DAA1-HDHAS", "Blue"));
         parkingLot.parkCar(new Car("2121-TWRW-HDGD", "Red"));
 
         String command = "leave 2";
         String expectedResult = String.format(EXPECTED_OUTPUT_WHEN_SLOT_NUMBER_IS_FREE, 2);
-        assertThat(parkingLot.executeAction(command), is(equalTo(expectedResult)));
+        assertThat(parkingLot.executeCommand(command), is(equalTo(expectedResult)));
     }
 
     @Test
@@ -433,14 +433,14 @@ class ParkingLotTest {
     void shouldValidateAndCallGetRegistrationNumbersForCarsWithColorCommand(){
         ParkingLot parkingLot = new ParkingLot();
         int capacity = 4;
-        parkingLot.executeAction(String.format("create_parking_lot %d", capacity));
+        parkingLot.executeCommand(String.format("create_parking_lot %d", capacity));
         parkingLot.parkCar(new Car("K89I-83121-KLD89", "Green"));
         parkingLot.parkCar(new Car("CKI-8DAA1-HDHAS", "Blue"));
         parkingLot.parkCar(new Car("2121-TWRW-HDGD", "Red"));
         parkingLot.parkCar(new Car("FGH-8977-K05GHK", "Green"));
         String expectedResult = "K89I-83121-KLD89, FGH-8977-K05GHK";
         String command = "registration_numbers_for_cars_with_colour Green";
-        assertThat(parkingLot.executeAction(command), is(equalTo(expectedResult)));
+        assertThat(parkingLot.executeCommand(command), is(equalTo(expectedResult)));
     }
 
     @Test
@@ -449,7 +449,7 @@ class ParkingLotTest {
         ParkingLot parkingLot = new ParkingLot();
         int capacity = 4;
         String command = null;
-        assertThat(parkingLot.executeAction(command), is(isEmptyOrNullString()));
+        assertThat(parkingLot.executeCommand(command), is(isEmptyOrNullString()));
     }
 
 
@@ -465,7 +465,7 @@ class ParkingLotTest {
         parkingLot.parkCar(new Car("CKI-8DAA1-HDHAS", "Blue"));
         parkingLot.parkCar(new Car("2121-TWRW-HDGD", "Purple"));
         parkingLot.parkCar(new Car("FGH-8977-K05GHK", "Blue"));
-        assertThat(parkingLot.executeAction(command), is(equalTo(expectedResult)));
+        assertThat(parkingLot.executeCommand(command), is(equalTo(expectedResult)));
     }
 
     @Test
@@ -480,7 +480,7 @@ class ParkingLotTest {
         parkingLot.parkCar(new Car("CKI-8DAA1-HDHAS", "Blue"));
         parkingLot.parkCar(new Car("2121-TWRW-HDGD", "Purple"));
         parkingLot.parkCar(new Car("FGH-8977-K05GHK", "Blue"));
-        assertThat(parkingLot.executeAction(command), is(equalTo(expectedResult)));
+        assertThat(parkingLot.executeCommand(command), is(equalTo(expectedResult)));
     }
 
     @Test
@@ -493,7 +493,7 @@ class ParkingLotTest {
         String registrationNumber="K89I-83121-KLD89";
         String color = "Green";
         String command = String.format("park %s %s", registrationNumber, color);
-        assertThat(parkingLot.executeAction(command), is(equalTo(expectedResult)));
+        assertThat(parkingLot.executeCommand(command), is(equalTo(expectedResult)));
     }
     @Test
     @DisplayName("Should validate and execute status command")
@@ -516,7 +516,7 @@ class ParkingLotTest {
                 "5\tFGH-8977-K05GHK\tGreen\n" +
                 "6\tFHGD-GSFDS-12132\tYellow\n";
         String command = "status";
-        assertThat(parkingLot.executeAction(command), is(equalTo(expectedResult)));
+        assertThat(parkingLot.executeCommand(command), is(equalTo(expectedResult)));
     }
 
     @Test
@@ -524,6 +524,6 @@ class ParkingLotTest {
     void shouldIgnoreInvalidCommandAndExecuteNothing(){
         ParkingLot parkingLot = new ParkingLot();
         String command = "non-existent";
-        assertThat(parkingLot.executeAction(command), is(isEmptyString()));
+        assertThat(parkingLot.executeCommand(command), is(isEmptyString()));
     }
 }
