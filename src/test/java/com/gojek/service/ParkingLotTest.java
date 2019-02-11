@@ -67,9 +67,9 @@ class ParkingLotTest {
     }
 
     @Test
-    @DisplayName("Should park car if previously occupied slot is now empty")
-    void shouldParkACarInParkingLotInSubsequentlyVacantSlot(){
-        int parkingLotCapacity = 3;
+    @DisplayName("Should park car in previously occupied slot first if now empty")
+    void shouldParkACarInPreviouslyOccupiedParkingSpace(){
+        int parkingLotCapacity = 4;
         ParkingLot parkingLot = new ParkingLot();
         parkingLot.createParkingLot(parkingLotCapacity);
 
@@ -90,12 +90,42 @@ class ParkingLotTest {
         //assertEquals(EXPECTED_OUTPUT_WHEN_PARKINGLOT_IS_FULL, outcome2);
 
         //Call 2 should leave making slot 2 vacant
+        int slotNumber = 2;
+        parkingLot.unPark(slotNumber);
         //car 4 should park in slot 2
         registrationNumber = "WDW-787-MP";
         color = "WHITE";
         Car car4 = new Car(registrationNumber, color);
         String outcome4 = parkingLot.parkCar(car4);
-        assertEquals(EXPECTED_OUTPUT_WHEN_NEW_SLOT_IS_ALLOCATED, outcome4);
+        assertEquals(outcome4, is(equalTo(String.format(EXPECTED_OUTPUT_WHEN_NEW_SLOT_IS_ALLOCATED, slotNumber))));
+    }
+
+    @Test
+    @DisplayName("Should make previously occupied parking space empty")
+    void shouldUnParkACar(){
+        int parkingLotCapacity = 3;
+        ParkingLot parkingLot = new ParkingLot();
+        parkingLot.createParkingLot(parkingLotCapacity);
+
+        String registrationNumber = "JPX-876-GP";
+        String color = "BLUE";
+        Car car = new Car(registrationNumber, color);
+        parkingLot.parkCar(car);
+
+        registrationNumber = "DFX-999-GP";
+        color = "GREEN";
+        Car car2 = new Car(registrationNumber, color);
+        String outcome2 = parkingLot.parkCar(car2);
+
+        registrationNumber = "ASK-515-WP";
+        color = "PURPLE";
+        Car car3 = new Car(registrationNumber, color);
+        parkingLot.parkCar(car3);
+
+        //Call 2 should leave making slot 2 vacant
+        int slotNumber = 2;
+        String leaveSlotOutcome = parkingLot.unPark(slotNumber);
+        assertThat(leaveSlotOutcome, is(equalTo(String.format(EXPECTED_OUTPUT_WHEN_SLOT_NUMBER_IS_FREE, slotNumber))));
     }
 
 }

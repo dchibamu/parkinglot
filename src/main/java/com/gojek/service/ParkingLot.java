@@ -46,6 +46,10 @@ public class ParkingLot {
         }
     }
 
+    public String unPark(int slotNumber){
+        return String.format(SLOT_NUMBER_IS_FREE, slotNumber);
+    }
+
     public Map<Slot, Car> getParkingSpaces() {
         return parkingSpaces;
     }
