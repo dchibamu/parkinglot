@@ -27,6 +27,13 @@ public class ParkingLot {
         return String.format(PARKING_LOT_CREATED, capacity);
     }
 
+    /**
+     * Finds a parking slot for a car if parking lot is not full.
+     * If a car has left the parking slot then there is a slot available closer to the entrance,
+     * in that case allocate that vacant slot first.
+     * @param car - car to be parked in parking lot
+     * @return String message indicating success creation of parking lot
+     */
     public String parkCar(Car car){
 
         if(isAlreadyParked(car.getRegistrationNumber())){
@@ -48,6 +55,11 @@ public class ParkingLot {
         }
     }
 
+    /**
+     * Makes a parking slot vacant, adding the available slot to free slot queue, to be allocated first if another car request for parking.
+     * @param slotNumber Parking lot slot number
+     * @return String message indicating vacant slot
+     */
     public String unPark(int slotNumber){
         if(slotNumber < 1 || slotNumber > capacity)
             return IGNORE;
@@ -57,6 +69,11 @@ public class ParkingLot {
         return String.format(SLOT_NUMBER_IS_FREE, slotNumber);
     }
 
+    /**
+     * Finds all registration numbers for cars with given color.
+     * @param color - car color
+     * @return String of registration numbers concatenated by comma.
+     */
     public String getRegistrationNumbersForCarsWithColor(String color){
         String result = parkingSpaces.entrySet().stream()
                 .filter(slot -> slot.getKey().isOccupied())

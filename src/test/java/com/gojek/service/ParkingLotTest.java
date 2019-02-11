@@ -184,4 +184,60 @@ class ParkingLotTest {
         assertThat(outCome, is(equalTo(expectedRegistrationNumbers)));
     }
 
+    @Test
+    @DisplayName("Should return slot numbers for green cars")
+    void getSlotNumbersForCarsWithColor_Green(){
+        String givenColor = "GREEN";
+        String expectedSlotNumbers = "2";
+        int parkingLotCapacity = 3;
+        ParkingLot parkingLot = new ParkingLot();
+        parkingLot.createParkingLot(parkingLotCapacity);
+
+        String registrationNumber = "JPX-876-GP";
+        String color = "BLUE";
+        Car car = new Car(registrationNumber, color);
+        parkingLot.parkCar(car);
+
+        registrationNumber = "HJK-970-DN";
+        color = "GREEN";
+        Car car2 = new Car(registrationNumber, color);
+        parkingLot.parkCar(car2);
+
+        registrationNumber = "JKLA-9897-HR";
+        color = "BLUE";
+        Car car3 = new Car(registrationNumber, color);
+        parkingLot.parkCar(car3);
+
+        String outCome = parkingLot.getSlotNumbersForCarsWithColor(givenColor);
+        assertThat(outCome, is(equalTo(expectedSlotNumbers)));
+    }
+
+    @Test
+    @DisplayName("Should return slot numbers for blue cars")
+    void getSlotNumbersForCarsWithColor_Blue(){
+        String givenColor = "GREEN";
+        String expectedSlotNumbers = "1, 3";
+        int parkingLotCapacity = 3;
+        ParkingLot parkingLot = new ParkingLot();
+        parkingLot.createParkingLot(parkingLotCapacity);
+
+        String registrationNumber = "JPX-876-GP";
+        String color = "BLUE";
+        Car car = new Car(registrationNumber, color);
+        parkingLot.parkCar(car);
+
+        registrationNumber = "HJK-970-DN";
+        color = "GREEN";
+        Car car2 = new Car(registrationNumber, color);
+        parkingLot.parkCar(car2);
+
+        registrationNumber = "JKLA-9897-HR";
+        color = "BLUE";
+        Car car3 = new Car(registrationNumber, color);
+        parkingLot.parkCar(car3);
+
+        String outCome = parkingLot.getSlotNumbersForCarsWithColor(givenColor);
+        assertThat(outCome, is(equalTo(expectedSlotNumbers)));
+    }
+
 }
