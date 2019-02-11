@@ -14,8 +14,8 @@ public class Car {
         return registrationNumber;
     }
 
-    public void setRegistrationNumber(String registrationNumber) {
-        this.registrationNumber = registrationNumber;
+    public String getColor() {
+        return color;
     }
 
     @Override
