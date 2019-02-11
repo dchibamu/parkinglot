@@ -156,4 +156,32 @@ class ParkingLotTest {
         assertThat(outCome, is(equalTo(expectedREgistrationNumbers)));
     }
 
+    @Test
+    @DisplayName("Should return zero registration numbers for cars with colorless color")
+    void getRegistrationNumbersForCarsWithColor_Colorless(){
+        String givenColor = "colorless";
+        String expectedRegistrationNumbers = "Not found";
+        int parkingLotCapacity = 3;
+        ParkingLot parkingLot = new ParkingLot();
+        parkingLot.createParkingLot(parkingLotCapacity);
+
+        String registrationNumber = "JPX-876-GP";
+        String color = "BLUE";
+        Car car = new Car(registrationNumber, color);
+        parkingLot.parkCar(car);
+
+        registrationNumber = "HJK-970-DN";
+        color = "YELLOW";
+        Car car2 = new Car(registrationNumber, color);
+        parkingLot.parkCar(car2);
+
+        registrationNumber = "JKLA-9897-HR";
+        color = "BLUE";
+        Car car3 = new Car(registrationNumber, color);
+        parkingLot.parkCar(car3);
+
+        String outCome = parkingLot.getRegistrationNumbersForCarsWithColor(givenColor);
+        assertThat(outCome, is(equalTo(expectedRegistrationNumbers)));
+    }
+
 }
