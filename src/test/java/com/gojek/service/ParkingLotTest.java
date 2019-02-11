@@ -97,7 +97,7 @@ class ParkingLotTest {
         color = "WHITE";
         Car car4 = new Car(registrationNumber, color);
         String outcome4 = parkingLot.parkCar(car4);
-        assertEquals(outcome4, is(equalTo(String.format(EXPECTED_OUTPUT_WHEN_NEW_SLOT_IS_ALLOCATED, slotNumber))));
+        assertThat(outcome4, is(equalTo(String.format(EXPECTED_OUTPUT_WHEN_NEW_SLOT_IS_ALLOCATED, slotNumber))));
     }
 
     @Test

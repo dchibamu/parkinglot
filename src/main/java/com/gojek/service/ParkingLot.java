@@ -5,6 +5,7 @@ import com.gojek.domain.Slot;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.PriorityQueue;
 
 import static com.gojek.util.ParkingLotUtil.*;
@@ -47,6 +48,11 @@ public class ParkingLot {
     }
 
     public String unPark(int slotNumber){
+        if(slotNumber < 1 || slotNumber > capacity)
+            return IGNORE;
+        Slot slot = findSlotBySlotNumber(slotNumber).get();
+        slot.setOccupied(false);
+        freeSlots.add(slot);
         return String.format(SLOT_NUMBER_IS_FREE, slotNumber);
     }
 
@@ -61,5 +67,12 @@ public class ParkingLot {
     private boolean isAlreadyParked(String registrationNumber){
         return parkingSpaces.values().stream()
                 .anyMatch(v->v.getRegistrationNumber().equalsIgnoreCase(registrationNumber));
+    }
+
+    private Optional<Slot> findSlotBySlotNumber(int slotNumber){
+        return parkingSpaces.entrySet().stream()
+                .map(slot -> slot.getKey())
+                .filter(slotNum -> slotNum.getNumber() == slotNumber)
+                .findFirst();
     }
 }
