@@ -100,7 +100,7 @@ public class ParkingLot {
                 .map(Slot::getNumber)
                 .map(String::valueOf)
                 .collect(Collectors.joining(", "));
-        if(result != null && !result.isEmpty())
+        if(StringUtils.isNotBlank(result))
             return result;
         else
             return NOT_FOUND;
@@ -129,7 +129,8 @@ public class ParkingLot {
     public String status(){
         StringBuffer output = new StringBuffer(String.format("%s\t%s\t%s\n","Slot No.","Registration No","Colour"));
         for(Map.Entry<Slot, Car> entry: parkingSpaces.entrySet()){
-            output.append(String.format("%s\t%s\t%s\n",entry.getKey().getNumber(),entry.getValue().getRegistrationNumber(), entry.getValue().getColor()));
+            if(entry.getKey().isOccupied())
+                output.append(String.format("%s\t%s\t%s\n",entry.getKey().getNumber(),entry.getValue().getRegistrationNumber(), entry.getValue().getColor()));
         }
         return output.toString();
     }
@@ -142,10 +143,9 @@ public class ParkingLot {
      * @return String output to STDOUT
      */
     public String executeAction(String commandLine){
-        String[] commandLineArgs = Arrays.stream(commandLine.split("\\s+")).toArray(String[]::new);
-
-        if(!StringUtils.isNoneBlank(commandLineArgs))
+        if(StringUtils.isBlank(commandLine))
             return IGNORE;
+        String[] commandLineArgs = Arrays.stream(commandLine.split("\\s+")).toArray(String[]::new);
         Command command = getCommand(commandLineArgs[0]);
 
         switch (command){
@@ -153,31 +153,36 @@ public class ParkingLot {
                 int parkingLotSize = parseNumericalArguments(commandLineArgs[1]);
                 if( parkingLotSize > 0)
                     return createParkingLot(parkingLotSize);
+                break;
             case LEAVE:
                 int slotNum = parseNumericalArguments(commandLineArgs[1]);
                 if( slotNum > 0 && slotNum < capacity)
                     return unPark(slotNum);
+                break;
             case REGISTRATION_NUMBERS_FOR_CARS_WITH_COLOUR:
                 if(commandLineArgs.length == 2)
                     return getRegistrationNumbersForCarsWithColor(commandLineArgs[1]);
+                break;
             case SLOT_NUMBERS_FOR_CARS_WITH_COLOR:
                 if(commandLineArgs.length == 2)
                     return getSlotNumbersForCarsWithColor(commandLineArgs[1]);
+                break;
             case SLOT_NUMBER_FOR_REGISTRATION_NUMBER:
                 if(commandLineArgs.length == 2)
                     return getSlotNumberForRegistrationNumber(commandLineArgs[1]);
+                break;
             case PARK:
                if(commandLineArgs.length == 3) {
                    Car car = new Car(commandLineArgs[1], commandLineArgs[2]);
                    return parkCar(car);
                }
+               break;
             case STATUS:
-                if(commandLineArgs.length == 1){
+                if(commandLineArgs.length == 1)
                     return status();
-                }
-            default:
-                return IGNORE;
+                break;
         }
+        return IGNORE;
     }
 
     /**
@@ -212,7 +217,7 @@ public class ParkingLot {
 
     private Optional<Slot> findSlotBySlotNumber(int slotNumber){
         return parkingSpaces.entrySet().stream()
-                .map(slot -> slot.getKey())
+                .map(Map.Entry::getKey)
                 .filter(slotNum -> slotNum.getNumber() == slotNumber)
                 .findFirst();
     }
