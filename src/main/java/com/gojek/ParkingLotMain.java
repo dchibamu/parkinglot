@@ -3,15 +3,14 @@ package com.gojek;
 import com.gojek.service.ParkingLot;
 import org.apache.commons.lang3.StringUtils;
 
-import java.nio.file.Path;
-
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
-import static com.gojek.util.ParkingLotUtil.EXIT;
+import static com.gojek.util.AppConstants.EXIT;
 
 public class ParkingLotMain {
 

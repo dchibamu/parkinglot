@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.gojek.domain.Command.INVALID;
-import static com.gojek.util.ParkingLotUtil.*;
+import static com.gojek.util.AppConstants.*;
 
 public class ParkingLot {
 
@@ -70,7 +70,7 @@ public class ParkingLot {
     }
 
     /**
-     * Finds all registration numbers for cars with given color.
+     * Finds all registration numbers for cars with given color, otherwise Not found.
      * @param color - car color
      * @return String of registration numbers concatenated by comma.
      */
@@ -87,8 +87,23 @@ public class ParkingLot {
             return NOT_FOUND;
     }
 
+    /**
+     * Returns slot numbers of cars with given color, otherwise Not found
+     * @param color - car color
+     * @return String of concatenated slot numbers
+     */
     public String getSlotNumbersForCarsWithColor(String color){
-        return "6, 7";
+        String result = parkingSpaces.entrySet().stream()
+                .filter(car -> car.getValue().getColor().equalsIgnoreCase(color))
+                .filter(entry -> entry.getKey().isOccupied())
+                .map(Map.Entry::getKey)
+                .map(Slot::getNumber)
+                .map(String::valueOf)
+                .collect(Collectors.joining(", "));
+        if(result != null && !result.isEmpty())
+            return result;
+        else
+            return NOT_FOUND;
     }
 
     public String getSlotNumberForRegistrationNumber(String registrationNumber){

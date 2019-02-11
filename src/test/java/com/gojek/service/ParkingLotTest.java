@@ -215,7 +215,7 @@ class ParkingLotTest {
     @Test
     @DisplayName("Should return slot numbers for blue cars")
     void getSlotNumbersForCarsWithColor_Blue(){
-        String givenColor = "GREEN";
+        String givenColor = "Blue";
         String expectedSlotNumbers = "1, 3";
         int parkingLotCapacity = 3;
         ParkingLot parkingLot = new ParkingLot();
