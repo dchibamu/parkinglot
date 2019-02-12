@@ -16,7 +16,6 @@
         <junit-platform-launcher>1.1.0</junit-platform-launcher>
         <hamcrest-library>1.3</hamcrest-library>
         <maven-surefire-plugin>2.22.1</maven-surefire-plugin>
-        <commons-lang3>3.8.1</commons-lang3>
     </properties>
 
     <dependencies>
