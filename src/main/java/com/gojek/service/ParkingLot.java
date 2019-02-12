@@ -3,7 +3,6 @@ package com.gojek.service;
 import com.gojek.domain.Car;
 import com.gojek.domain.Command;
 import com.gojek.domain.Slot;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -81,7 +80,7 @@ public class ParkingLot {
                 .filter(car -> car.getColor().equalsIgnoreCase(color))
                 .map(Car::getRegistrationNumber)
                 .collect(Collectors.joining(", "));
-        if(StringUtils.isNotBlank(result))
+        if(result != null && !result.isEmpty() )
             return result;
         else
             return NOT_FOUND;
@@ -100,7 +99,7 @@ public class ParkingLot {
                 .map(Slot::getNumber)
                 .map(String::valueOf)
                 .collect(Collectors.joining(", "));
-        if(StringUtils.isNotBlank(result))
+        if(result != null && !result.isEmpty() )
             return result;
         else
             return NOT_FOUND;
@@ -143,7 +142,7 @@ public class ParkingLot {
      * @return String output to STDOUT
      */
     public String executeCommand(String commandLine){
-        if(StringUtils.isBlank(commandLine))
+        if(commandLine == null || "".equals(commandLine))
             return IGNORE;
         String[] commandLineArgs = Arrays.stream(commandLine.split("\\s+")).toArray(String[]::new);
         Command command = getCommand(commandLineArgs[0]);
