@@ -67,8 +67,7 @@ class ParkingLotTest {
         String color = "BLUE";
         Car car = new Car(registrationNumber, color);
         parkingLot.parkCar(car);
-        String outCome = parkingLot.parkCar(car);
-        assertEquals(EXPECTED_EMPTY_STRING, outCome);
+        assertEquals(EXPECTED_EMPTY_STRING, parkingLot.parkCar(car));
     }
 
     @Test
@@ -272,7 +271,7 @@ class ParkingLotTest {
         parkingLot.parkCar(car2);
 
         registrationNumber = "JKLA-9897-HR";
-        color = "BLUE";
+        color = "blue";
         Car car3 = new Car(registrationNumber, color);
         parkingLot.parkCar(car3);
 
@@ -370,14 +369,14 @@ class ParkingLotTest {
     @Test
     @DisplayName("Should display formatted parking lot status")
     void shouldDisplayFormattedParkingLotStatusOutput() {
-        String expectedOutput = "Slot No.\tRegistration No\tColour\n" +
-                "1\tK89I-83121-KLD89\tWhite\n" +
-                "2\tCKI-8DAA1-HDHAS\tBlue\n" +
-                "3\tHJFAH-824832-JKJ\tWhite\n" +
-                "4\tFGH-8977-K05GHK\tArmy Green\n" +
-                "5\tDADS-532432-HDG\tBlue\n"+
-                "6\tGHHFG-232-75645\tArmy Green\n" +
-                "7\tFHGD-GSFDS-12132\tYELLOW\n";
+        StringBuffer expectedResult = new StringBuffer(String.format("%-10s%-20s%-20s\n", "Slot No.", "Registration No", "Colour"));
+        expectedResult.append(String.format("%-10s%-20s%-20s\n","1", "K89I-83121-KLD89", "White"));
+        expectedResult.append(String.format("%-10s%-20s%-20s\n","2", "CKI-8DAA1-HDHAS", "Blue"));
+        expectedResult.append(String.format("%-10s%-20s%-20s\n","3", "HJFAH-824832-JKJ", "White"));
+        expectedResult.append(String.format("%-10s%-20s%-20s\n","4", "FGH-8977-K05GHK", "Army Green"));
+        expectedResult.append(String.format("%-10s%-20s%-20s\n","5", "DADS-532432-HDG", "Blue"));
+        expectedResult.append(String.format("%-10s%-20s%-20s\n","6", "GHHFG-232-75645", "Army Green"));
+        expectedResult.append(String.format("%-10s%-20s%-20s\n","7", "FHGD-GSFDS-12132", "YELLOW"));
         ParkingLot parkingLot = new ParkingLot();
         int capacity = 10;
         parkingLot.createParkingLot(capacity);
@@ -398,7 +397,7 @@ class ParkingLotTest {
         parkingLot.parkCar(car6);
         parkingLot.parkCar(car7);
         parkingLot.parkCar(car8);
-        assertThat(parkingLot.status(), is(equalTo(expectedOutput)));
+        assertThat(parkingLot.status(), is(equalTo(expectedResult.toString())));
     }
 
     @Test
@@ -460,7 +459,7 @@ class ParkingLotTest {
         int capacity = 4;
         parkingLot.createParkingLot(capacity);
         String expectedResult = "2, 4";
-        String command = "slot_numbers_for_cars_with_color Blue";
+        String command = "slot_numbers_for_cars_with_colour Blue";
         parkingLot.parkCar(new Car("K89I-83121-KLD89", "Green"));
         parkingLot.parkCar(new Car("CKI-8DAA1-HDHAS", "Blue"));
         parkingLot.parkCar(new Car("2121-TWRW-HDGD", "Purple"));
@@ -508,15 +507,14 @@ class ParkingLotTest {
         parkingLot.parkCar(new Car("FGH-8977-K05GHK", "Green"));
         parkingLot.parkCar(new Car("FHGD-GSFDS-12132", "Yellow"));
         parkingLot.unPark(4);
-        String expectedResult = "Slot No.\tRegistration No\tColour\n" +
-                "1\tK89I-83121-KLD89\tWhite\n" +
-                "2\tCKI-8DAA1-HDHAS\tBlue\n" +
-                "3\tHJFAH-824832-JKJ\tWhite\n" +
-             //   "4\tKSAS-809DA-WAAA\tpink\n" +
-                "5\tFGH-8977-K05GHK\tGreen\n" +
-                "6\tFHGD-GSFDS-12132\tYellow\n";
+        StringBuffer expectedResult = new StringBuffer(String.format("%-10s%-20s%-20s\n", "Slot No.", "Registration No", "Colour"));
+        expectedResult.append(String.format("%-10s%-20s%-20s\n","1", "K89I-83121-KLD89", "White"));
+        expectedResult.append(String.format("%-10s%-20s%-20s\n", "2", "CKI-8DAA1-HDHAS", "Blue"));
+        expectedResult.append(String.format("%-10s%-20s%-20s\n", "3", "HJFAH-824832-JKJ", "White"));
+        expectedResult.append(String.format("%-10s%-20s%-20s\n", "5", "FGH-8977-K05GHK", "Green"));
+        expectedResult.append(String.format("%-10s%-20s%-20s\n", "6", "FHGD-GSFDS-12132", "Yellow"));
         String command = "status";
-        assertThat(parkingLot.executeCommand(command), is(equalTo(expectedResult)));
+        assertThat(parkingLot.executeCommand(command), is(equalTo(expectedResult.toString())));
     }
 
     @Test
@@ -525,5 +523,29 @@ class ParkingLotTest {
         ParkingLot parkingLot = new ParkingLot();
         String command = "non-existent";
         assertThat(parkingLot.executeCommand(command), is(isEmptyString()));
+    }
+
+    @Test
+    @DisplayName("Should return Not found if registration_numbers_for_cars_with_colour command is executed on non-existent parking lot")
+    void returnNotFoundIfNoParkingLot_registration_numbers_for_cars_with_colour(){
+        ParkingLot parkingLot = new ParkingLot();
+        String color = "BLUE";
+        assertThat(parkingLot.getRegistrationNumbersForCarsWithColor(color), is(equalTo(EXPECTED_OUTPUT_WHEN_NOT_FOUND)));
+    }
+
+    @Test
+    @DisplayName("Should return Not found if slot_numbers_for_cars_with_colour command is executed on non-existent parking lot")
+    void returnNotFoundIfNoParkingLot_slot_numbers_for_cars_with_colour(){
+        ParkingLot parkingLot = new ParkingLot();
+        String color = "BLUE";
+        assertThat(parkingLot.getSlotNumbersForCarsWithColor(color), is(equalTo(EXPECTED_OUTPUT_WHEN_NOT_FOUND)));
+    }
+
+    @Test
+    @DisplayName("Should return Not found if slot_number_for_registration_number command is executed on non-existent parking lot")
+    void returnNotFoundIfNoParkingLot_slot_number_for_registration_number(){
+        ParkingLot parkingLot = new ParkingLot();
+        String color = "BLUE";
+        assertThat(parkingLot.getSlotNumberForRegistrationNumber(color), is(equalTo(EXPECTED_OUTPUT_WHEN_NOT_FOUND)));
     }
 }

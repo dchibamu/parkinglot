@@ -35,7 +35,7 @@ public class ParkingLot {
      */
     public String parkCar(Car car){
 
-        if(isAlreadyParked(car.getRegistrationNumber())){
+        if(!isParkingLotCreated() || isAlreadyParked(car.getRegistrationNumber())){
             return IGNORE;
         }
         if(!freeSlots.isEmpty()){
@@ -60,7 +60,7 @@ public class ParkingLot {
      * @return String message indicating vacant slot
      */
     public String unPark(int slotNumber){
-        if(slotNumber < 1 || slotNumber > capacity)
+        if(slotNumber < 1 || slotNumber > capacity || !isParkingLotCreated())
             return IGNORE;
         Slot slot = findSlotBySlotNumber(slotNumber).get();
         slot.setOccupied(false);
@@ -74,6 +74,8 @@ public class ParkingLot {
      * @return String of registration numbers concatenated by comma.
      */
     public String getRegistrationNumbersForCarsWithColor(String color){
+        if(!isParkingLotCreated())
+            return NOT_FOUND;
         String result = parkingSpaces.entrySet().stream()
                 .filter(slot -> slot.getKey().isOccupied())
                 .map(Map.Entry::getValue)
@@ -92,6 +94,8 @@ public class ParkingLot {
      * @return String of concatenated slot numbers
      */
     public String getSlotNumbersForCarsWithColor(String color){
+        if(!isParkingLotCreated())
+            return NOT_FOUND;
         String result = parkingSpaces.entrySet().stream()
                 .filter(car -> car.getValue().getColor().equalsIgnoreCase(color))
                 .filter(entry -> entry.getKey().isOccupied())
@@ -111,7 +115,8 @@ public class ParkingLot {
      * @return - String number or Not found
      */
     public String getSlotNumberForRegistrationNumber(String registrationNumber){
-
+        if(!isParkingLotCreated())
+            return NOT_FOUND;
         return parkingSpaces.entrySet().stream()
                 .filter(car ->car.getValue().getRegistrationNumber().equalsIgnoreCase(registrationNumber))
                 .filter(entry -> entry.getKey().isOccupied())
@@ -126,10 +131,10 @@ public class ParkingLot {
     }
 
     public String status(){
-        StringBuffer output = new StringBuffer(String.format("%s\t%s\t%s\n","Slot No.","Registration No","Colour"));
+        StringBuffer output = new StringBuffer(String.format("%-10s%-20s%-20s\n","Slot No.","Registration No","Colour"));
         for(Map.Entry<Slot, Car> entry: parkingSpaces.entrySet()){
             if(entry.getKey().isOccupied())
-                output.append(String.format("%s\t%s\t%s\n",entry.getKey().getNumber(),entry.getValue().getRegistrationNumber(), entry.getValue().getColor()));
+                output.append(String.format("%-10s%-20s%-20s\n",entry.getKey().getNumber(),entry.getValue().getRegistrationNumber(), entry.getValue().getColor()));
         }
         return output.toString();
     }
@@ -162,7 +167,7 @@ public class ParkingLot {
                 if(commandLineArgs.length == 2)
                     return getRegistrationNumbersForCarsWithColor(commandLineArgs[1]);
                 break;
-            case SLOT_NUMBERS_FOR_CARS_WITH_COLOR:
+            case SLOT_NUMBERS_FOR_CARS_WITH_COLOUR:
                 if(commandLineArgs.length == 2)
                     return getSlotNumbersForCarsWithColor(commandLineArgs[1]);
                 break;
@@ -219,5 +224,9 @@ public class ParkingLot {
                 .map(Map.Entry::getKey)
                 .filter(slotNum -> slotNum.getNumber() == slotNumber)
                 .findFirst();
+    }
+
+    private boolean isParkingLotCreated(){
+        return parkingSpaces != null;
     }
 }
