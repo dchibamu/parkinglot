@@ -15,7 +15,7 @@ public class ParkingLot {
     private int capacity;
     private Map<Slot, Car> parkingSpaces;
     private int slotNumber;
-    private PriorityQueue<Slot> freeSlots = new PriorityQueue<>( (s1, s2) -> s2.getNumber() - s1.getNumber());
+    private PriorityQueue<Slot> freeSlots = new PriorityQueue<>(Comparator.comparingInt(Slot::getNumber));
 
     public String createParkingLot(int size){
         if(size < 1)
@@ -136,7 +136,7 @@ public class ParkingLot {
             if(entry.getKey().isOccupied())
                 output.append(String.format("%-10s%-20s%-20s\n",entry.getKey().getNumber(),entry.getValue().getRegistrationNumber(), entry.getValue().getColor()));
         }
-        return output.toString();
+        return output.toString().trim();
     }
 
     /**

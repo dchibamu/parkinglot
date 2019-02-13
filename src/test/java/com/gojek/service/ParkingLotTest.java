@@ -397,7 +397,7 @@ class ParkingLotTest {
         parkingLot.parkCar(car6);
         parkingLot.parkCar(car7);
         parkingLot.parkCar(car8);
-        assertThat(parkingLot.status(), is(equalTo(expectedResult.toString())));
+        assertThat(parkingLot.status(), is(equalTo(expectedResult.toString().trim())));
     }
 
     @Test
@@ -514,7 +514,7 @@ class ParkingLotTest {
         expectedResult.append(String.format("%-10s%-20s%-20s\n", "5", "FGH-8977-K05GHK", "Green"));
         expectedResult.append(String.format("%-10s%-20s%-20s\n", "6", "FHGD-GSFDS-12132", "Yellow"));
         String command = "status";
-        assertThat(parkingLot.executeCommand(command), is(equalTo(expectedResult.toString())));
+        assertThat(parkingLot.executeCommand(command), is(equalTo(expectedResult.toString().trim())));
     }
 
     @Test
